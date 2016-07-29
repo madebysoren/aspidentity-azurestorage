@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.AzureTable", "identity\azuretable\ElCamino.AspNet.Identity.AzureTable.csproj", "{FC2B604C-548E-4981-876B-F3C4D1C3987B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElCamino.AspNet.Identity.AzureTable.Tests", "identity\azuretable.tests\ElCamino.AspNet.Identity.AzureTable.Tests.csproj", "{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{726434D3-F3F2-4B50-8D74-FF465BBE493E}"
+	ProjectSection(SolutionItems) = preProject
+		License.txt = License.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B166E58E-62DE-483C-9424-8A88049D9024}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Signed|Any CPU = Signed|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC2B604C-548E-4981-876B-F3C4D1C3987B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC2B604C-548E-4981-876B-F3C4D1C3987B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC2B604C-548E-4981-876B-F3C4D1C3987B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC2B604C-548E-4981-876B-F3C4D1C3987B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC2B604C-548E-4981-876B-F3C4D1C3987B}.Signed|Any CPU.ActiveCfg = Signed|Any CPU
+		{FC2B604C-548E-4981-876B-F3C4D1C3987B}.Signed|Any CPU.Build.0 = Signed|Any CPU
+		{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}.Signed|Any CPU.ActiveCfg = Signed|Any CPU
+		{9AE1AD32-39E4-4EF5-9463-FDA0089BB0FD}.Signed|Any CPU.Build.0 = Signed|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

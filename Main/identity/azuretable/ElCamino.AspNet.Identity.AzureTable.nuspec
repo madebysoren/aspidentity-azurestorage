@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://identityazuretable.codeplex.com/license</licenseUrl>
+    <projectUrl>https://identityazuretable.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>
+      Release $version$ This project is an open source high performance plugin to ASP.NET Identity framework using Azure Table Storage.
+      * Fixing a namespace change in Microsoft.WindowsAzure.ConfigurationManager package >= 3.0 
+    </releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>ASP.NET Identity 2.0 Azure Table Storage MVC UserStore RoleStore UserManager multi-tenant RA-GRS geo-redundant Microsoft.AspNet.Identity</tags>
+    <dependencies>
+      <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="3.1.0" />
+      <dependency id="WindowsAzure.Storage" version="4.3.0" />
+    </dependencies>
+  </metadata>
+</package>
