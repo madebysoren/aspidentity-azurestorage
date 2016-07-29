@@ -188,10 +188,13 @@ namespace ElCamino.AspNet.Identity.AzureTable
             List<Task> tasks = new List<Task>(2);
             tasks.Add(_userTable.ExecuteAsync(TableOperation.Insert(user)));
 
+            IdentityUserIndex indexUsername = CreateUsernameIndex(user.Id.ToString());
+            tasks.Add(_indexTable.ExecuteAsync(TableOperation.InsertOrReplace(indexUsername)));
+
             if (!string.IsNullOrWhiteSpace(user.Email))
             {
-                IdentityUserIndex index = CreateEmailIndex(user.Id.ToString(), user.Email);
-                tasks.Add(_indexTable.ExecuteAsync(TableOperation.InsertOrReplace(index)));
+                IdentityUserIndex indexEmail = CreateEmailIndex(user.Id.ToString(), user.Email);
+                tasks.Add(_indexTable.ExecuteAsync(TableOperation.InsertOrReplace(indexEmail)));
             }
 
             await Task.WhenAll(tasks.ToArray());
@@ -232,6 +235,10 @@ namespace ElCamino.AspNet.Identity.AzureTable
             }
 
             tasks.Add(userBatch.ExecuteBatchAsync(_userTable));
+
+            IdentityUserIndex indexUsername = CreateUsernameIndex(user.Id.ToString());
+            tasks.Add(_indexTable.ExecuteAsync(TableOperation.Delete(indexUsername)));
+
             if (!string.IsNullOrWhiteSpace(user.Email))
             {
                 IdentityUserIndex indexEmail = CreateEmailIndex(user.Id.ToString(), user.Email);
@@ -292,7 +299,7 @@ namespace ElCamino.AspNet.Identity.AzureTable
 
         private TableQuery FindByEmailQuery(string plainEmail)
         {            
-            return GetUserIdsByIndex(KeyHelper.GenerateRowKeyUserEmail(plainEmail));
+            return GetUserIdByIndex(KeyHelper.GeneratePartitionKeyIndexByEmail(plainEmail), KeyHelper.GenerateRowKeyUserEmail(plainEmail));
         }
 
         private TableQuery GetUserIdByIndex(string partitionkey, string rowkey)
@@ -755,14 +762,26 @@ namespace ElCamino.AspNet.Identity.AzureTable
             }
             user.Email = email;
         }
+        
+        private async Task DeleteUsernameIndexAsync(string userId)
+        {
+            var indexes = (from index in _indexTable.CreateQuery<IdentityUserIndex>()
+                           where index.PartitionKey.Equals(userId) && index.RowKey.Equals(userId)
+                           select index).ToList();
+            foreach (IdentityUserIndex de in indexes)
+            {
+                if (de.Id == userId)
+                {
+                    await _indexTable.ExecuteAsync(TableOperation.Delete(de));
+                }
+            }
+        }
 
-        //Fixes deletes for non-unique emails for users.
         private async Task DeleteEmailIndexAsync(string userId, string plainEmail)
         {
-            //Only query by email rowkey to pickup old partitionkeys from 1.2.9.2 and lower
             var indexes = (from index in _indexTable.CreateQuery<IdentityUserIndex>()
-                               where index.RowKey.Equals(KeyHelper.GenerateRowKeyUserEmail(plainEmail))
-                               select index).ToList();
+                           where index.PartitionKey.Equals(KeyHelper.GeneratePartitionKeyIndexByEmail(plainEmail)) && index.RowKey.Equals(KeyHelper.GenerateRowKeyUserEmail(plainEmail))
+                           select index).ToList();
             foreach (IdentityUserIndex de in indexes)
             {
                 if (de.Id == userId)
@@ -907,6 +926,13 @@ namespace ElCamino.AspNet.Identity.AzureTable
             }
             taskList.Add(deleteBatchHelper.ExecuteBatchAsync(_userTable));
 
+            //Delete the old username index
+            taskList.Add(DeleteUsernameIndexAsync(oldUserId));
+
+            IdentityUserIndex indexUsername = CreateUsernameIndex(userNameKey);
+
+            taskList.Add(_indexTable.ExecuteAsync(TableOperation.InsertOrReplace(indexUsername)));
+
             // Create the new email index
             if (!string.IsNullOrWhiteSpace(user.Email))
             {
@@ -995,8 +1021,20 @@ namespace ElCamino.AspNet.Identity.AzureTable
             return new IdentityUserIndex()
             {
                 Id = userid,
-                PartitionKey = userid,
+                PartitionKey = KeyHelper.GeneratePartitionKeyIndexByEmail(email),
                 RowKey = KeyHelper.GenerateRowKeyUserEmail(email),
+                KeyVersion = KeyHelper.KeyVersion,
+                ETag = Constants.ETagWildcard
+            };
+        }
+
+        private IdentityUserIndex CreateUsernameIndex(string userid)
+        {
+            return new IdentityUserIndex()
+            {
+                Id = userid,
+                PartitionKey = userid,
+                RowKey = userid,
                 KeyVersion = KeyHelper.KeyVersion,
                 ETag = Constants.ETagWildcard
             };
